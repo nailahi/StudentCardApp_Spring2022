@@ -197,24 +197,31 @@ class StudentView {
 		return row;
 	}
 	addNewStudent(id){
-		// Get the modal
-var modal = document.getElementById("myModal");
+		let student = this.studentData.find(x=>x.id === id);
+		let modalTitle = viewHelper.getElement('#studentAddModalLabel');
+		modalTitle.textContent = student.name;
 
-// Get the button that opens the modal
-var btn = document.getElementById("myBtn");
+		let classRow = this.createDataRow('Type Class', InputEvent);
+		let majorRow = this.createDataRow('Type Major', InputEvent);
+		let deleteRow = this.createDeleteRow(id);
 
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
+		let modalBody = viewHelper.getElement('#studentAddModalBody');
+		modalBody.replaceChildren();
+		modalBody.append( classRow, majorRow, deleteRow);
 
-// When the user clicks on the button, open the modal
-btn.onclick = function() {
-  modal.style.display = "block";
-}
+		let btnFooterClose = viewHelper.createElement('button', ['btn','btn-primary']);
+		btnFooterClose.setAttribute('type', 'button');
+		btnFooterClose.setAttribute('data-dismiss', 'modal');
+		btnFooterClose.textContent = 'Cancel';
+		btnFooterClose.setAttribute('type', 'button');
+		btnFooterClose.setAttribute('data-save', 'modal');
+		btnFooterClose.textContent = 'Submit';
+		let modalFooter = viewHelper.getElement('#studentModalFooter');
+		modalFooter.replaceChildren();
+		modalFooter.append(btnFooterClose);
 
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-  modal.style.display = "none";
-}
+		const modal = document.querySelector('#studentModal');
+		$('#studentModal').modal('toggle');
 	}
 
 	
