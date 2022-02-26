@@ -1,4 +1,4 @@
-var StudentModel = require('../models/student');
+var StudentModel = require('../models/studentModel');
 studentModel = new StudentModel();
 
 

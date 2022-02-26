@@ -95,16 +95,12 @@ class StudentModel {
 
 class StudentView {
 	constructor() {
-		//this.createView();
+	//	this.createView();
+		
 	}
-	
-
-
-
-
 	createView(studentData) {
 		
-//		consol.log(studentData);
+	//	consol.log(studentData);
 		this.studentData = studentData;
 		
 		this.app = viewHelper.getElement('#root');
@@ -119,7 +115,7 @@ class StudentView {
 
 	createTitle() {
 		let title = viewHelper.createElement('div', ['title','h3', 'mt-4','mb-4']);
-		title.textContent = 'Students';
+		title.textContent = 'Students: by Nailah';
 		return title;
 	}
 
@@ -196,11 +192,29 @@ class StudentView {
 		let button = viewHelper.createElement('button', ['btn','btn-secondary']);
 		button.textContent = 'Delete';
 		button.setAttribute('onClick', 'app.handleDeleteCard('+id+');');
-
-
 		fieldColumn.append(button);
 		row.append(labelColumn, fieldColumn);
 		return row;
+	}
+	addNewStudent(id){
+		// Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on the button, open the modal
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
 	}
 
 	
@@ -240,6 +254,7 @@ class StudentController {
 	handleStudentDeleted() {
 		const modal = document.querySelector('#studentModal');
 		$('#studentModal').modal('toggle');
+		router.post('/student/:id/delete', student_controller.student_delete_post);
 	}
 
 
