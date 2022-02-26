@@ -23,7 +23,7 @@ router.delete('/student/:id', student_controller.student_delete);
 
 
 
-/*
+
 
 // POST request for creating student.
 router.post('/student/create', student_controller.student_create_post);
@@ -41,9 +41,7 @@ router.get('/student/:id/update', student_controller.student_update_get);
 router.post('/student/:id/update', student_controller.student_update_post);
 
 
-*/
-
-
+//this is a test to see if it's broken for no reason
 
 
 
