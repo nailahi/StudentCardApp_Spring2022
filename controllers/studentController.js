@@ -34,10 +34,12 @@ exports.student_create_get = function(req, res) {
 };
 
 // Handle student create on POST.
+//MVC slide 49
 exports.student_create_post = function(req, res) {
     //if the data is JSON, access the data using req.body.<field> ie. req.body.name
-    console.log(req.body);
-    res.send('NOT IMPLEMENTED: student create POST');
+    student = this.studentModel.createStudent(req.body.name, req.body.class, req.body.major);
+    result = {result:'success'}
+    res.send(result);
 };
 
 // Display student delete form on GET.

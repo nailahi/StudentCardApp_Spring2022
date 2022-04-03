@@ -26,7 +26,7 @@ router.delete('/student/:id', student_controller.student_delete);
 
 
 // POST request for creating student.
-router.post('/student/create', student_controller.student_create_post);
+router.post('/student', student_controller.student_create_post);
 
 // GET request to delete student.
 router.get('/student/:id/delete', student_controller.student_delete_get);

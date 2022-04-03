@@ -68,6 +68,29 @@ class StudentModel {
 		xhttp.setRequestHeader("Content-type", "application/json");
 		xhttp.send();
 	}
+	createNewStudent(Name,Class,Major) {
+		console.log('In GetStudent()');
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				console.log(this.responseText);
+				
+				
+				this.students = JSON.parse(this.responseText);
+				
+				const element = document.querySelector('#root');
+				//add event handler in controller
+				let event = new CustomEvent('StudentAdded', {detail:this.students});
+				element.dispatchEvent(event);
+			 
+			}
+		};
+		//copy from let url to end (MVC3+4+5 48)
+		let url= `http://localhost:3050/api/student/`;
+		xhttp.open("POST", "http://localhost:3050/api/students", true);
+		xhttp.setRequestHeader("Content-type", "application/json");
+		xhttp.send(JSON.stringify({Name:nameValue, Class:classValue, Major:majorValue}));
+	}
 
 	deleteStudent(id){
 		console.log('In DeleteStudent()');
@@ -109,7 +132,7 @@ class StudentView {
 		
 		let container = viewHelper.createElement('div', ['container']);
 		container.append(title, cards);
-		
+		this.app.replaceChildren();
 		this.app.append(container);
 	}
 
@@ -170,6 +193,35 @@ class StudentView {
 		$('#studentModal').modal('toggle');
 
 	}
+	createAddModal(){
+		let modalTitle = viewHelper.getElement('#studentModalLabel');
+		modalTitle.textContent = 'add student';
+
+		let nameRow = this.createInputRow('Name','placeholder');
+		let classRow = this.createInputRow('Class','placeholder' );
+		let majorRow = this.createInputRow('Major','placeholder' );
+
+		let modalBody = viewHelper.getElement('#studentModalBody');
+		modalBody.replaceChildren();
+		modalBody.append( nameRow, classRow, majorRow);
+
+		let btnFooterClose = viewHelper.createElement('button', ['btn','btn-primary']);
+		btnFooterClose.setAttribute('type', 'button');
+		btnFooterClose.setAttribute('data-dismiss', 'modal');
+		btnFooterClose.textContent = 'Close';
+		//submit button
+		let btnSubmit = viewHelper.createElement('button', ['btn','btn-primary']);
+		btnSubmit.setAttribute('type', 'button');
+		btnSubmit.setAttribute('onClick', 'app.handleSubmit()');
+		btnSubmit.textContent = 'Submit';
+		let modalFooter = viewHelper.getElement('#studentModalFooter');
+		modalFooter.replaceChildren();
+		modalFooter.append(btnFooterClose,btnSubmit);
+
+		const modal = document.querySelector('#studentModal');
+		$('#studentModal').modal('toggle');
+
+	}
 
 	createDataRow(label, data) {
 		let row = viewHelper.createElement('div', ['form-group', 'row']);
@@ -196,13 +248,25 @@ class StudentView {
 		row.append(labelColumn, fieldColumn);
 		return row;
 	}
+	createInputRow(label, data) {
+		let row = viewHelper.createElement('div', ['form-group', 'row']);
+		let labelColumn = viewHelper.createElement('label', ['col-sm-2','col-form-label']);
+		labelColumn.textContent = label;
+		let fieldColumn = viewHelper.createElement('div', ['col-sm-10']);
+		let fieldText = viewHelper.createElement('input', ['form-control']);
+		fieldText.setAttribute('id', label);
+		fieldText.textContent = data;
+		fieldColumn.append(fieldText);
+		row.append(labelColumn, fieldColumn);
+		return row;
+	}
 	addNewStudent(id){
 		let student = this.studentData.find(x=>x.id === id);
 		let modalTitle = viewHelper.getElement('#studentAddModalLabel');
 		modalTitle.textContent = student.name;
 
-		let classRow = this.createDataRow('Type Class', InputEvent);
-		let majorRow = this.createDataRow('Type Major', InputEvent);
+		let classRow = this.createDeleteRow('Type Class', InputEvent);
+		let majorRow = this.createDeleteRow('Type Major', InputEvent);
 		let deleteRow = this.createDeleteRow(id);
 
 		let modalBody = viewHelper.getElement('#studentAddModalBody');
@@ -252,6 +316,18 @@ class StudentController {
 		console.log('modal ' + id + ' clicked');
 		this.view.createStudentModal(id);
 	}
+	handleAddClick() {
+		console.log('modal ' + ' clicked');
+		this.view.createAddModal();
+	}
+	handleSubmit(){
+		//retrieve value of text boxes
+		let Name = document.getElementById('Name').value;
+		let Class = document.getElementById('Class').value;
+		let Major = document.getElementById('Major').value;
+		this.model.createNewStudent(Name,Class,Major);
+	}
+
 
 	handleDeleteCard(id) {
 		console.log('modal ' + id + ' delete');
@@ -259,9 +335,8 @@ class StudentController {
 	}
 
 	handleStudentDeleted() {
-		const modal = document.querySelector('#studentModal');
 		$('#studentModal').modal('toggle');
-		router.post('/student/:id/delete', student_controller.student_delete_post);
+		this.model.getStudentData();
 	}
 
 
