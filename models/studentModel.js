@@ -48,6 +48,7 @@ class StudentModel {
 	createNewStudent(){
 		let newStudent ={id, Name, Class, Major}
 		this.studentList.push(newStudent);
+		return this.studentId;
 	}
 	
 
