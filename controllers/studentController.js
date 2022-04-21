@@ -1,5 +1,5 @@
 var StudentModel = require('../models/studentModel');
-studentModel = new StudentModel();
+StudentModel = new StudentModel();
 
 
 const path = require("path");
@@ -7,22 +7,29 @@ const path = require("path");
 
 // Display list of all students.
 exports.student_list = function(req, res) {
-	students = studentModel.getAllStudents();
+	students = StudentModel.getAllStudents();
 	res.send(students);	
 };
 
 // Display detail page for a specific student.
 exports.student_detail = function(req, res) {
-	student = studentModel.getStudentById(req.params.id);
+	student = StudentModel.getStudentById(req.params.id);
 	res.send(student);
 };
 
 // Delete a specific student.
 exports.student_delete = function(req, res) {
-	studentModel.deleteStudentById(req.params.id);
+	StudentModel.deleteStudentById(req.params.id);
 	result = {result:'success'}
     res.send(result);
 };
+
+//Update Student List
+exports.student_update_post = function(req,res){
+    student = this.studentModel.updateStudent(req.params.id, req.body);
+    result = {result:`success`};
+    res.send(result);
+}
 
 
 
